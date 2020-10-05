@@ -119,3 +119,72 @@ let gameWorld =
           |> Seq.map (fun room -> (room.Id, room))
           |> Map.ofSeq
       Player = player }
+
+
+// ------------ LOGIC -----------
+
+// Defining the Result Type
+type Result<'TSuccess, 'TFailure> =
+    | Success of 'TSuccess
+    | Failure of 'TFailure
+
+// Binding Function
+let bind processFunc lastResult =
+    match lastResult with
+    | Success s -> processFunc s
+    | Failure f -> Failure f
+
+// Defining Bind Operator
+let (>>=) input func = bind func input
+
+let switch processFunc input = Success(processFunc input)
+
+let getRoom world roomId =
+    match world.Rooms.TryFind roomId with
+    | Some room -> Success room
+    | None -> Failure "Room does not exist!"
+
+let describeDetails details = printf "\n\n%s\n\n%s\n\n"
+
+// Match Expression
+let extractDetailsFromRoom (room: Room) = room.Details
+
+let describeCurrentRoom world =
+    world.Player.Location
+    |> getRoom world
+    |> (bind (switch extractDetailsFromRoom)
+        >> bind (switch describeDetails)) // Composition taking 2 functions merging them
+
+// Parameter Destructuring
+let north ({ North = northExit }: Exits) = northExit
+let south ({ South = southExit }: Exits) = southExit
+let west ({ West = westExit }: Exits) = westExit
+let east ({ East = eastExit }: Exits) = eastExit
+
+let getCurrentRoom world = world.Player.Location |> getRoom world
+
+let setCurrentRoom world room =
+    { world with
+          Player = { world.Player with Location = room.Id } }
+
+// Railway-Oriented Programming (https://fsharpforfunandprofit.com/posts/recipe-part2/)
+let getExit direction exits =
+    match (direction exits) with
+    | PassableExit (_, roomId) -> Success roomId
+    | LockedExit (_, _, _) -> Failure "There is a locked door in that direction."
+    | NoExit (_) -> Failure "There is no room in that direction."
+
+let move direction world =
+    world
+    |> getCurrentRoom
+    |> bind (switch (fun room -> room.Exits)) // With bind function
+    >>= (getExit direction) // With bind operator
+    >>= (getRoom world)
+    >>= (switch (setCurrentRoom world))
+
+gameWorld
+|> move south
+>>= (move north)
+>>= (move west)
+>>= (switch (describeCurrentRoom))
+|> ignore
