@@ -7,6 +7,7 @@
     <ItemGroup>
       <Compile Include="fsharp_001.fs" />
       <Compile Include="fsharp_002.fs" />
+      <Compile Include="fsharp_003.fs" />
       <Compile Include="Model.fs" />
     </ItemGroup>
 
