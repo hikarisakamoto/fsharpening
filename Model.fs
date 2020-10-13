@@ -144,7 +144,7 @@ let getRoom world roomId =
     | Some room -> Success room
     | None -> Failure "Room does not exist!"
 
-let describeDetails details = printf "\n\n%s\n\n%s\n\n"
+let describeDetails details = sprintf "\n\n%s\n\n%s\n\n"
 
 // Match Expression
 let extractDetailsFromRoom (room: Room) = room.Details
@@ -182,9 +182,16 @@ let move direction world =
     >>= (getRoom world)
     >>= (switch (setCurrentRoom world))
 
+let displayResult result =
+    match result with
+    | Success s -> printf "%s" s
+    | Failure f -> printf "%s" f
+
 gameWorld
 |> move south
 >>= (move north)
 >>= (move west)
->>= (switch (describeCurrentRoom))
+>>= (describeCurrentRoom)
 |> ignore
+
+// Error handling
