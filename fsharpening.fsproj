@@ -9,6 +9,7 @@
       <Compile Include="fsharp_002.fs" />
       <Compile Include="fsharp_003.fs" />
       <Compile Include="Model.fs" />
+      <Compile Include="Game.fs" />
     </ItemGroup>
 
 </Project>
