@@ -10,6 +10,7 @@
       <Compile Include="fsharp_003.fs" />
       <Compile Include="Model.fs" />
       <Compile Include="Game.fs" />
+      <Compile Include="syntax_101.fs" />
     </ItemGroup>
 
 </Project>
