@@ -11,6 +11,7 @@
       <Compile Include="Model.fs" />
       <Compile Include="Game.fs" />
       <Compile Include="syntax_101.fs" />
+      <Content Include="README.md" />
     </ItemGroup>
 
 </Project>
