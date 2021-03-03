@@ -5,10 +5,13 @@ let sayHello person =
 
 let isValid person = not (String.IsNullOrWhiteSpace person)
 
+let isAllowed person = person <> "Eve"
+
 [<EntryPoint>]
 let main argv =
     argv
     |> Array.filter isValid
+    |> Array.filter isAllowed
     |> Array.iter sayHello
 
     printfn "Nice to meet you."
