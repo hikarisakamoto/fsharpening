@@ -3,7 +3,7 @@
 let sayHello person =
     printfn "Hello %s from my F# program" person
 
-let isValid person = not (String.IsNullOrWhiteSpace person)
+let isValid person = String.IsNullOrWhiteSpace person |> not
 
 let isAllowed person = person <> "Eve"
 
