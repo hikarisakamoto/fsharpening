@@ -16,14 +16,23 @@ module Student =
 
     let nameParts (s: string) =
         let elements = s.Split(',')
-        let surname = elements.[0].Trim()
-        let givenName = elements.[1].Trim()
-        surname, givenName
+
+        match elements with
+        | [| surname; givenName |] ->
+            {|
+                Surname = surname.Trim()
+                GivenName = givenName.Trim()
+            |}
+        | [| surname |] ->
+            {|
+                Surname = surname.Trim()
+                GivenName = "(None)"
+            |}
+        | _ -> raise (System.FormatException(sprintf "Invalid student name format: \"%s\"" s))
 
     let fromString (s: string) =
         let elements = s.Split('\t')
-        let name = elements.[0]
-        let surname, givenName = name |> nameParts
+        let name = elements.[0] |> nameParts
         let id = elements.[1]
 
         let scores =
@@ -37,8 +46,8 @@ module Student =
         let maxScore = scores |> Array.max
 
         {
-            Surname = surname
-            GivenName = givenName
+            Surname = name.Surname
+            GivenName = name.GivenName
             Id = id
             MeanScore = meanScore
             MinScore = minScore
