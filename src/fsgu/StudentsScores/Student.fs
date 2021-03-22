@@ -1,4 +1,4 @@
-namespace StudentScores
+namespace StudentsScores
 
 open StudentsScore
 
